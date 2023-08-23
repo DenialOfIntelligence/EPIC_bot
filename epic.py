@@ -3,15 +3,16 @@ import requests
 import json
 from os import system
 nasa_api_url = "https://epic.gsfc.nasa.gov/api/natural/"
-mastodon_api_url="https://social.linux.pizza"
+mastodon_api_url="https://botsin.space"
 upload_url=f"{mastodon_api_url}/api/v2/media"
 status_url = f"{mastodon_api_url}/api/v1/statuses"
 access_token="" #Mastodon access token
-last_id=0
+id_file=open("last_id.txt","r")
+last_id=int(id_file.readline().strip('\n'))
 while True:
 	response = requests.get(nasa_api_url)
 	data = response.json()
-	id_new=data[0].get("identifier")
+	id_new=int(data[0].get("identifier"))
 	if not last_id==id_new:
 		date=data[0].get("date")[:-9].split("-")
 		date_human=data[0].get("date")[:-9]
@@ -21,10 +22,12 @@ while True:
 		wget_string=f"wget https://epic.gsfc.nasa.gov/archive/natural/{date[0]}/{date[1]}/{date[2]}/png/{image} -q "
 		system(wget_string)
 		last_id=id_new
+		id_file=open("last_id.txt","w")
+		id_file.write(f"{last_id}\n")
+		id_file.close()
 		print("image downloaded")
 
 		#media uploading
-		file="Space image"
 		headers = {"Authorization": f"Bearer {access_token}"}
 		with open(image, "rb") as image_file:
 			image_response = requests.post(upload_url, headers=headers, files={"file": image_file})
@@ -35,10 +38,8 @@ while True:
 		toot_data = {
 			"status": mastodon_text,
 			"media_ids[]": media_id,
-			"visibility": direct
 }
 		toot_response = requests.post(status_url, headers=headers, data=toot_data)
-		print(toot_response.json())
 	else:
 		print("Image is is not new")
-	sleep(1800*4)
+	sleep(600)
