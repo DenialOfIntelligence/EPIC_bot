@@ -22,6 +22,7 @@ while True:
 		time = data[0].get("date")[-8:]
 		image = data[0].get("image")+".png"
 		wget_string = f"wget https://epic.gsfc.nasa.gov/archive/natural/{date[0]}/{date[1]}/{date[2]}/png/{image} -q "
+		system(wget_string)
 		last_id = id_new
 		print("image downloaded")
 
