@@ -6,7 +6,7 @@ import datetime
 # Run at 08:30 and post the first image at 09:00 in !utc!
 # then post the next one half an hour later
 nasa_api_url = "https://epic.gsfc.nasa.gov/api/natural/"
-mastodon_api_url = "https://social.linux.pizza"
+mastodon_api_url = "https://botsin.space"
 upload_url = f"{mastodon_api_url}/api/v2/media"
 status_url = f"{mastodon_api_url}/api/v1/statuses"
 access_token = "81HcvNvOrnel2muoMQ_zHVNShibes_7RHlM5cifgx6g"  # Mastodon token
